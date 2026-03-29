@@ -1,0 +1,11 @@
+/* 讓背景圖、顏色、陰影在切換模式時都有 0.5 秒的漸變感 */
+.banner, 
+.banner-bg, 
+#banner,
+.header-inner,
+.navbar,
+body {
+  transition: background 0.5s ease-in-out, background-image 0.5s ease-in-out, background-color 0.5s ease-in-out !important;
+}
+
+/* 如果你之後想改字體顏色或調整 Minecraft 伺服器的特殊樣式，可以寫在下面 */
