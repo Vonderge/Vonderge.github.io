@@ -1,11 +1,39 @@
-/* 讓背景圖、顏色、陰影在切換模式時都有 0.5 秒的漸變感 */
-.banner, 
-.banner-bg, 
-#banner,
-.header-inner,
-.navbar,
-body {
-  transition: background 0.5s ease-in-out, background-image 0.5s ease-in-out, background-color 0.5s ease-in-out !important;
+/* 讓背景圖換圖時滑順 */
+.banner, .banner-bg, #banner, .header-inner {
+  transition: background-image 0.5s ease-in-out !important;
 }
 
-/* 如果你之後想改字體顏色或調整 Minecraft 伺服器的特殊樣式，可以寫在下面 */
+/* 1. 標題字體放大與美化 */
+.index-header .h2, .banner-text {
+  font-size: 3.8rem !important; /* 超大字體，很有氣勢 */
+  font-weight: bold !important;
+  color: #ffffff !important;
+  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8) !important;
+  min-height: 1.5em; /* 預留高度防止跳動 */
+  display: block;
+}
+
+/* 2. 定義「單個字」的初始狀態與動畫 */
+.letter {
+  display: inline-block;
+  opacity: 0;               /* 初始透明 */
+  transform: translateY(10px); /* 初始稍微往下掉 */
+  filter: blur(5px);        /* 初始有點模糊 */
+  animation: letterAppear 0.4s ease forwards; /* 動畫執行 0.4s 後停在最後一格 */
+}
+
+/* 3. 動畫過程：從透明模糊變清晰彈回 */
+@keyframes letterAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* 手機版適配：避免字太大 */
+@media (max-width: 768px) {
+  .index-header .h2, .banner-text {
+    font-size: 2.2rem !important;
+  }
+}
