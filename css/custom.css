@@ -1,31 +1,44 @@
-/* source/css/custom.css */
+/* --- 圖片漸入效果核心設定 --- */
 
-/* 強制放大標題：加入 body 提高權重 */
+/* 1. 針對所有可能的背景區塊設定過渡動畫 */
+.banner, 
+.banner-bg, 
+#banner, 
+.header-inner {
+  /* 設定 background-image 切換時，執行 0.5 秒的淡入淡出 */
+  /* ease-in-out 會讓動畫頭尾順滑 */
+  transition: background-image 0.5s ease-in-out !important;
+  
+  /* 確保圖片位置固定且填滿，避免換圖時跳動 */
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+}
+
+/* 2. 優化效能：告訴瀏覽器這是一個會變動的屬性 */
+.banner-bg {
+  will-change: background-image;
+}
+
+/* --- 原本的字體設定 (維持你改小的版本) --- */
 body .index-header .h2, 
 body .banner-text,
 body #subtitle {
-  font-size: 2.0rem !important; 
+  font-size: 2.2rem !important; /* 這裡是你剛才調小的數值 */
   font-weight: bold !important;
   color: #ffffff !important;
-  text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.8) !important;
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8) !important;
   display: block !important;
-  opacity: 1 !important; /* 確保容器本身是可見的 */
-  min-height: 1.5em;
 }
 
-/* 逐字動畫設定 */
+/* 逐字動畫設定 (保持不變) */
 .letter {
   display: inline-block !important;
   opacity: 0;
-  transform: translateY(15px);
-  filter: blur(5px);
+  transform: translateY(10px);
   animation: letterAppear 0.5s ease forwards !important;
 }
 
 @keyframes letterAppear {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
