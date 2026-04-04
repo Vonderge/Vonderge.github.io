@@ -111,14 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
         banners.forEach(el => el.classList.add('is-dark-fade'));
         currentIdx = pickRandomIndex();
         bgTimeout = setTimeout(() => {
-          setBgVariable('day', bgPairs[currentIdx].day);
+          setBgVariable('night', bgPairs[currentIdx].night);
           window.isClickPending = false;
           btn.disabled = false;
         }, 850);
       } else {
         banners.forEach(el => el.classList.remove('is-dark-fade'));
         bgTimeout = setTimeout(() => {
-          setBgVariable('night', bgPairs[currentIdx].night);
+          setBgVariable('day', bgPairs[currentIdx].day);
           window.isClickPending = false;
           btn.disabled = false;
         }, 850);
