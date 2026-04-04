@@ -1,0 +1,93 @@
+/* ============================================================
+   背景結構：CSS 變數控制版
+   ============================================================ */
+:root {
+  --day-bg: url('/bg/mo.png');
+  --night-bg: url('/bg/dn.png');
+}
+
+.banner, .banner-bg, #banner, .header-inner {
+  position: relative !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-color: #222 !important;
+  background-image: var(--day-bg) !important;
+  z-index: 0;
+}
+
+.banner::before, .banner-bg::before, #banner::before, .header-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-image: var(--night-bg) !important;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out !important;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.is-dark-fade::before {
+  opacity: 1 !important;
+}
+
+/* ============================================================
+   標題與文字動畫
+   ============================================================ */
+body .index-header .h2,
+body .banner-text,
+body #subtitle {
+  opacity: 0 !important;
+  font-size: 2.2rem !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.8) !important;
+  display: block !important;
+  min-height: 1.5em;
+  transition: opacity 0.1s ease;
+}
+
+body .index-header .h2.js-typed,
+body .banner-text.js-typed,
+body #subtitle.js-typed {
+  opacity: 1 !important;
+}
+
+.letter {
+  display: inline-block !important;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: letterAppear 0.5s ease forwards !important;
+}
+
+@keyframes letterAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   行動裝置優化
+   ============================================================ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, textarea, select {
+  touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+  body .index-header .h2,
+  body .banner-text,
+  body #subtitle {
+    font-size: 1.5rem !important;
+  }
+}
