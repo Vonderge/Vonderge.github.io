@@ -33,6 +33,14 @@
   pointer-events: none;
 }
 
+/* 頁面加載時禁用過渡 */
+html:not([data-page-loaded]) .banner::before,
+html:not([data-page-loaded]) .banner-bg::before,
+html:not([data-page-loaded]) #banner::before,
+html:not([data-page-loaded]) .header-inner::before {
+  transition: none !important;
+}
+
 .is-dark-fade::before {
   opacity: 1 !important;
 }

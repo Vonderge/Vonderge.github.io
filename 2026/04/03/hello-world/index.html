@@ -35,6 +35,18 @@
   
   <title>Hello World - Hexo</title>
 
+  <!-- 深色模式和背景預初始化 -->
+  <style>
+    /* 如果是深色模式，立即禁用背景過渡並顯示夜間背景 */
+    [data-user-color-scheme="dark"] .banner::before,
+    [data-user-color-scheme="dark"] .banner-bg::before,
+    [data-user-color-scheme="dark"] #banner::before,
+    [data-user-color-scheme="dark"] .header-inner::before {
+      transition: none !important;
+      opacity: 1 !important;
+    }
+  </style>
+
   <!-- 在CSS加载前立即应用深色模式，防止闪现 -->
   <script>
     (function() {
@@ -50,7 +62,7 @@
     })();
   </script>
 
-  <!-- 背景預初始化，防止切換頁面時閃現 -->
+  <!-- 背景CSS變數預初始化 -->
   <script>
     (function() {
       var bgPairs = [
@@ -60,18 +72,6 @@
       var randomIdx = Math.floor(Math.random() * bgPairs.length);
       document.documentElement.style.setProperty('--day-bg', bgPairs[randomIdx].day);
       document.documentElement.style.setProperty('--night-bg', bgPairs[randomIdx].night);
-      
-      // 如果是深色模式，預先設置類和禁用過渡
-      var scheme = document.documentElement.getAttribute('data-user-color-scheme');
-      if (scheme === 'dark') {
-        // 添加暫時禁用過渡的樣式，避免頁面加載時的過渡動畫
-        var style = document.createElement('style');
-        style.textContent = `.banner::before, .banner-bg::before, #banner::before, .header-inner::before { 
-          transition: none !important; 
-          opacity: 1 !important; 
-        }`;
-        document.head.appendChild(style);
-      }
     })();
   </script>
 
