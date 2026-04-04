@@ -57,44 +57,16 @@
       document.documentElement.style.setProperty('--day-bg', bgPairs[randomIdx].day);
       document.documentElement.style.setProperty('--night-bg', bgPairs[randomIdx].night);
       
-      // 如果是深色模式，立即應用夜間背景樣式
+      // 如果是深色模式，預先設置類和禁用過渡
       var scheme = document.documentElement.getAttribute('data-user-color-scheme');
       if (scheme === 'dark') {
-        // 監聽 DOM 插入並立即應用夜間背景類
-        var observer = new MutationObserver(function(mutations) {
-          mutations.forEach(function(mutation) {
-            if (mutation.addedNodes.length) {
-              for (var i = 0; i < mutation.addedNodes.length; i++) {
-                var node = mutation.addedNodes[i];
-                if (node.nodeType === 1) { // 元素節點
-                  if (node.classList && (node.classList.contains('banner') || node.classList.contains('header-inner') || node.id === 'banner')) {
-                    node.classList.add('is-dark-fade');
-                  }
-                  var banners = node.querySelectorAll && node.querySelectorAll('.banner, .banner-bg, #banner, .header-inner');
-                  if (banners) {
-                    for (var j = 0; j < banners.length; j++) {
-                      banners[j].classList.add('is-dark-fade');
-                    }
-                  }
-                }
-              }
-            }
-          });
-        });
-        
-        observer.observe(document.body || document.documentElement, { 
-          childList: true, 
-          subtree: true 
-        });
-        
-        // 立即查找並應用到已存在的元素
-        setTimeout(function() {
-          var banners = document.querySelectorAll('.banner, .banner-bg, #banner, .header-inner');
-          for (var i = 0; i < banners.length; i++) {
-            banners[i].classList.add('is-dark-fade');
-          }
-          observer.disconnect(); // 應用後停止觀察
-        }, 10);
+        // 添加暫時禁用過渡的樣式，避免頁面加載時的過渡動畫
+        var style = document.createElement('style');
+        style.textContent = `.banner::before, .banner-bg::before, #banner::before, .header-inner::before { 
+          transition: none !important; 
+          opacity: 1 !important; 
+        }`;
+        document.head.appendChild(style);
       }
     })();
   </script>

@@ -73,6 +73,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const btn = document.querySelector('#color-toggle-btn');
   const banners = document.querySelectorAll('.banner, .banner-bg, #banner, .header-inner');
 
+  // 移除臨時禁用過渡的樣式，恢復正常過渡效果
+  var tempStyles = document.querySelectorAll('style');
+  for (var i = 0; i < tempStyles.length; i++) {
+    if (tempStyles[i].textContent.includes('transition: none')) {
+      tempStyles[i].remove();
+    }
+  }
+
   // 初始化背景
   currentIdx = Math.floor(Math.random() * bgPairs.length);
   setBgVariable('day', bgPairs[currentIdx].day);
