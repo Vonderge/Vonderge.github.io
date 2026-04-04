@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="2026-04-04 ✅ 修復行動裝置快速點擊早晚切換導致的動畫閃爍問題 ✅ 解決圖標和背景不同步現象（圖標改變但圖片不變） ✅ 優化 JavaScript 代碼結構（移除重複監聽器、移除 console.log） ✅ 優化 CSS 代碼結構（改進格式、添加註釋） ✅ 添加行動裝置友好優化（移除點擊高亮、改進觸摸交互） ✅ 同步 color-schema.js 和 change_bg.js 的冷卻">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-04-04T13:10:24.952Z">
+<meta property="article:published_time" content="2026-04-04T14:34:38.212Z">
 <meta property="article:modified_time" content="2026-04-04T13:03:34.563Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
@@ -46,6 +46,28 @@
       var scheme = saved || 'dark';
       if (scheme === 'dark') {
         document.documentElement.setAttribute('data-user-color-scheme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- 背景預初始化，防止切換頁面時閃現 -->
+  <script>
+    (function() {
+      var bgPairs = [
+        { day: "url('/bg/mo.png')", night: "url('/bg/dn.png')" },
+        { day: "url('/bg/mo2.png')", night: "url('/bg/dn2.png')" },
+      ];
+      var randomIdx = Math.floor(Math.random() * bgPairs.length);
+      document.documentElement.style.setProperty('--day-bg', bgPairs[randomIdx].day);
+      document.documentElement.style.setProperty('--night-bg', bgPairs[randomIdx].night);
+      
+      // 如果是深色模式，立即應用夜間背景樣式
+      var scheme = document.documentElement.getAttribute('data-user-color-scheme');
+      if (scheme === 'dark') {
+        // 添加臨時樣式確保夜間背景立即顯示
+        var style = document.createElement('style');
+        style.textContent = `.banner::before, .banner-bg::before, #banner::before, .header-inner::before { opacity: 1 !important; }`;
+        document.head.appendChild(style);
       }
     })();
   </script>

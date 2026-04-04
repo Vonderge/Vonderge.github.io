@@ -78,14 +78,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setBgVariable('day', bgPairs[currentIdx].day);
   setBgVariable('night', bgPairs[currentIdx].night);
 
-  // 應用初始主題
-  setTimeout(() => {
-    const initSchema = document.documentElement.getAttribute('data-user-color-scheme');
-    if (initSchema === 'dark') {
-      banners.forEach(el => el.classList.add('is-dark-fade'));
-    }
-    updateBannerText();
-  }, 100);
+  // 應用初始主題 - 立即應用，不需延遲
+  const initSchema = document.documentElement.getAttribute('data-user-color-scheme');
+  if (initSchema === 'dark') {
+    banners.forEach(el => el.classList.add('is-dark-fade'));
+  }
+  updateBannerText();
 
   if (!btn) return;
 

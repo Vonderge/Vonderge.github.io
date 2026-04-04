@@ -50,6 +50,28 @@
     })();
   </script>
 
+  <!-- 背景預初始化，防止切換頁面時閃現 -->
+  <script>
+    (function() {
+      var bgPairs = [
+        { day: "url('/bg/mo.png')", night: "url('/bg/dn.png')" },
+        { day: "url('/bg/mo2.png')", night: "url('/bg/dn2.png')" },
+      ];
+      var randomIdx = Math.floor(Math.random() * bgPairs.length);
+      document.documentElement.style.setProperty('--day-bg', bgPairs[randomIdx].day);
+      document.documentElement.style.setProperty('--night-bg', bgPairs[randomIdx].night);
+      
+      // 如果是深色模式，立即應用夜間背景樣式
+      var scheme = document.documentElement.getAttribute('data-user-color-scheme');
+      if (scheme === 'dark') {
+        // 添加臨時樣式確保夜間背景立即顯示
+        var style = document.createElement('style');
+        style.textContent = `.banner::before, .banner-bg::before, #banner::before, .header-inner::before { opacity: 1 !important; }`;
+        document.head.appendChild(style);
+      }
+    })();
+  </script>
+
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
