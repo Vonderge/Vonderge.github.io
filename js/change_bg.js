@@ -75,6 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 恢復過渡效果
   document.documentElement.setAttribute('data-page-loaded', '');
+  
+  // 頁面淡入
+  setTimeout(() => {
+    document.body.setAttribute('data-page-ready', '');
+  }, 50);
 
   // 初始化背景
   currentIdx = Math.floor(Math.random() * bgPairs.length);

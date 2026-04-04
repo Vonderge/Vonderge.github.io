@@ -1,6 +1,31 @@
 /* ============================================================
-   背景結構：CSS 變數控制版
+   頁面過渡動畫
    ============================================================ */
+body {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+body[data-page-ready] {
+  opacity: 1;
+}
+
+main, .main-content, .container {
+  animation: pageSlideIn 0.6s ease-in-out forwards;
+}
+
+@keyframes pageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 背景結構：CSS 變數控制版 */
 :root {
   --day-bg: url('/bg/mo.png');
   --night-bg: url('/bg/dn.png');
