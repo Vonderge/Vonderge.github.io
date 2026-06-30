@@ -28,7 +28,7 @@ main, .main-content, .container {
 /* 背景結構：CSS 變數控制版 */
 :root {
   --day-bg: url('/bg/mo.png');
-  --night-bg: url('/bg/dn.png');
+  --night-bg: url('/bg/dn2.png');
 }
 
 .banner, .banner-bg, #banner, .header-inner {
@@ -59,16 +59,17 @@ main, .main-content, .container {
   will-change: opacity;
 }
 
+.is-dark-fade::before {
+  opacity: 1 !important;
+  transition: opacity 0.8s ease-in-out !important;
+}
+
 /* 頁面加載時禁用過渡 */
 html:not([data-page-loaded]) .banner::before,
 html:not([data-page-loaded]) .banner-bg::before,
 html:not([data-page-loaded]) #banner::before,
 html:not([data-page-loaded]) .header-inner::before {
   transition: none !important;
-}
-
-.is-dark-fade::before {
-  opacity: 1 !important;
 }
 
 /* ============================================================

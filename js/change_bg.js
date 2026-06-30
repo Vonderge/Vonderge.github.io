@@ -5,8 +5,7 @@
 
 // 圖片組配置
 const bgPairs = [
-  { day: "url('/bg/mo.png')", night: "url('/bg/dn.png')" },
-  { day: "url('/bg/mo2.png')", night: "url('/bg/dn2.png')" },
+  { day: "url('/bg/mo.png')", night: "url('/bg/dn2.png')" },
 ];
 
 let currentIdx = 0;
