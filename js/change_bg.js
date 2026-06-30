@@ -61,7 +61,7 @@ function updateBannerText() {
   
   const isHomePage = window.location.pathname === '/' || window.location.pathname === '/index.html';
   const targetText = isHomePage 
-    ? (schema === 'dark' ? '月下的楓德爾格：靜謐荒野中的不滅火光' : '楓德爾格：築夢者的清晨，開拓者的起點')
+    ? (schema === 'dark' ? '月下的楓德爾格：靜謐荒野中的不滅火光' : '晨間的楓德爾格：築夢者的清晨，開拓者的起點')
     : bannerTitle.getAttribute('data-orig-text');
   
   typeWriter(bannerTitle, targetText);
