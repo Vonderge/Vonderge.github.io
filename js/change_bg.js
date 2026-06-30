@@ -68,6 +68,54 @@ function updateBannerText() {
   typeWriter(bannerTitle, targetText);
 }
 
+// 预加载所有日/夜背景图片，避免切换时等待加载而卡顿
+function preloadBackgroundImages() {
+  bgPairs.forEach(pair => {
+    ['day', 'night'].forEach(type => {
+      const url = pair[type].replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+      const img = new Image();
+      img.src = url;
+    });
+  });
+}
+
+// 防止分類收合動畫在快速重複點擊時閃爍
+function initCategoryCollapseGuard() {
+  const selector = '.category-item-action[data-toggle="collapse"]';
+  const transitionClass = 'is-transitioning';
+
+  document.addEventListener('click', function(event) {
+    const trigger = event.target.closest(selector);
+    if (!trigger) return;
+
+    const targetSelector = trigger.getAttribute('href');
+    const target = targetSelector ? document.querySelector(targetSelector) : null;
+    if (!target) return;
+
+    if (trigger.classList.contains(transitionClass)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    const computedDuration = parseFloat(window.getComputedStyle(target).transitionDuration || '0.35');
+    const duration = Number.isFinite(computedDuration) ? computedDuration * 1000 + 50 : 400;
+
+    trigger.classList.add(transitionClass);
+    target.classList.add(transitionClass);
+
+    const reset = function() {
+      trigger.classList.remove(transitionClass);
+      target.classList.remove(transitionClass);
+    };
+
+    target.addEventListener('shown.bs.collapse', reset, { once: true });
+    target.addEventListener('hidden.bs.collapse', reset, { once: true });
+
+    window.setTimeout(reset, duration);
+  }, true);
+}
+
 // 初始化
 document.addEventListener('DOMContentLoaded', function() {
   const btn = document.querySelector('#color-toggle-btn');
@@ -75,11 +123,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 恢復過渡效果
   document.documentElement.setAttribute('data-page-loaded', '');
+  initCategoryCollapseGuard();
   
   // 頁面淡入
   setTimeout(() => {
     document.body.setAttribute('data-page-ready', '');
   }, 50);
+
+  // 預加載背景圖片，避免切換時重新下載導致卡頓
+  preloadBackgroundImages();
 
   // 初始化背景
   currentIdx = Math.floor(Math.random() * bgPairs.length);
@@ -109,33 +161,25 @@ document.addEventListener('DOMContentLoaded', function() {
       bgTimeout = null;
     }
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const newSchema = document.documentElement.getAttribute('data-user-color-scheme');
 
       if (newSchema === 'dark') {
         banners.forEach(el => el.classList.add('is-dark-fade'));
         currentIdx = pickRandomIndex();
-        bgTimeout = setTimeout(() => {
-          setBgVariable('night', bgPairs[currentIdx].night);
-          window.isClickPending = false;
-          btn.disabled = false;
-        }, 850);
+        setBgVariable('night', bgPairs[currentIdx].night);
       } else {
         banners.forEach(el => el.classList.remove('is-dark-fade'));
-        bgTimeout = setTimeout(() => {
-          setBgVariable('day', bgPairs[currentIdx].day);
-          window.isClickPending = false;
-          btn.disabled = false;
-        }, 850);
+        setBgVariable('day', bgPairs[currentIdx].day);
       }
-    }, 50);
 
-    setTimeout(updateBannerText, 50);
+      setTimeout(updateBannerText, 50);
+    });
 
-    // 安全鎖：2秒後強制解除，防止永久鎖死
-    setTimeout(() => { 
-      window.isClickPending = false; 
+    // 解除鎖，防止長時間禁用
+    setTimeout(() => {
+      window.isClickPending = false;
       btn.disabled = false;
-    }, 2000);
+    }, 600);
   });
 });
