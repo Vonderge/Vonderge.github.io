@@ -19,15 +19,15 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，只在頁面尚未載入時禁用過渡，避免切換時瞬間消失 ✅ 限制大廳背景僅使用 mo.png 和 dn2.png，避免多餘背景閃爍  2026-04-05 ✅ 創建 Minecraft 主題成員頁面 - 設計 6 個角色卡片（主宰者、建造者、探險者、附魔者、機械師、挖掘者） ✅ 修復成員頁面 CSS">
+    <meta name="description" content="2026-07-03 ✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示 ✅ 將成員頁 .member-role 及 .member-desc 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂 ✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能  2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，">
 <meta property="og:type" content="website">
 <meta property="og:title" content="更新日誌">
 <meta property="og:url" content="http://example.com/changelog/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，只在頁面尚未載入時禁用過渡，避免切換時瞬間消失 ✅ 限制大廳背景僅使用 mo.png 和 dn2.png，避免多餘背景閃爍  2026-04-05 ✅ 創建 Minecraft 主題成員頁面 - 設計 6 個角色卡片（主宰者、建造者、探險者、附魔者、機械師、挖掘者） ✅ 修復成員頁面 CSS">
+<meta property="og:description" content="2026-07-03 ✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示 ✅ 將成員頁 .member-role 及 .member-desc 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂 ✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能  2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-06-30T17:50:07.506Z">
-<meta property="article:modified_time" content="2026-06-30T17:32:44.493Z">
+<meta property="article:published_time" content="2026-07-02T17:27:53.931Z">
+<meta property="article:modified_time" content="2026-07-02T17:27:50.941Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -238,6 +238,11 @@
             </a>
           </li>
         
+        <li class="nav-item" id="time-toggle-btn">
+          <a class="nav-link" target="_self" href="javascript:;" aria-label="Time Mode Toggle">
+            <i class="iconfont icon-sun" id="time-toggle-icon"></i>
+          </a>
+        </li>
       </ul>
     </div>
   </div>
@@ -355,6 +360,14 @@
             </a>
           </div>
         
+        <div class="col-4 mobile-grid-cell" id="mobile-time-toggle-btn">
+          <a href="javascript:;" aria-label="Time Mode Toggle">
+            <div class="mobile-grid-item">
+              <i class="iconfont icon-sun" id="mobile-time-toggle-icon"></i>
+              <span id="mobile-time-toggle-label">早</span>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -399,7 +412,12 @@
                 
 
 <article class="page-content">
-  <h2 id="2026-07-01"><a href="#2026-07-01" class="headerlink" title="2026-07-01"></a>2026-07-01</h2><ul>
+  <h2 id="2026-07-03"><a href="#2026-07-03" class="headerlink" title="2026-07-03"></a>2026-07-03</h2><ul>
+<li>✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示</li>
+<li>✅ 將成員頁 <code>.member-role</code> 及 <code>.member-desc</code> 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂</li>
+<li>✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能</li>
+</ul>
+<h2 id="2026-07-01"><a href="#2026-07-01" class="headerlink" title="2026-07-01"></a>2026-07-01</h2><ul>
 <li>✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s</li>
 <li>✅ 修正深色模式初始化樣式，只在頁面尚未載入時禁用過渡，避免切換時瞬間消失</li>
 <li>✅ 限制大廳背景僅使用 <code>mo.png</code> 和 <code>dn2.png</code>，避免多餘背景閃爍</li>

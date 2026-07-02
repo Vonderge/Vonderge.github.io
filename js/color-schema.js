@@ -6,11 +6,19 @@
 (function(window, document) {
   var rootElement = document.documentElement;
   var colorSchemaStorageKey = 'Fluid_Color_Scheme';
+  var timeModeStorageKey = 'Fluid_Time_Mode';
   var colorSchemaMediaQueryKey = '--color-mode';
   var userColorSchemaAttributeName = 'data-user-color-scheme';
   var defaultColorSchemaAttributeName = 'data-default-color-scheme';
   var colorToggleButtonSelector = '#color-toggle-btn';
   var colorToggleIconSelector = '#color-toggle-icon';
+  var timeToggleButtonSelector = '#time-toggle-btn';
+  var timeToggleIconSelector = '#time-toggle-icon';
+  var mobileColorToggleButtonSelector = '#mobile-color-toggle-btn';
+  var mobileColorToggleIconSelector = '#mobile-color-toggle-icon';
+  var mobileTimeToggleButtonSelector = '#mobile-time-toggle-btn';
+  var mobileTimeToggleIconSelector = '#mobile-time-toggle-icon';
+  var mobileTimeToggleLabelSelector = '#mobile-time-toggle-label';
   var iframeSelector = 'iframe';
 
   function setLS(k, v) {
@@ -70,6 +78,69 @@
     }
     // 返回固定的暗色模式，禁用时间自动切换
     return 'dark';
+  }
+
+  var validTimeModeKeys = {
+    morning: true,
+    evening: true
+  };
+
+  function isMorningNow() {
+    var hour = new Date().getHours();
+    return hour >= 6 && hour < 12;
+  }
+
+  function getDefaultTimeMode() {
+    return isMorningNow() ? 'morning' : 'evening';
+  }
+
+  function setTimeButton(mode) {
+    var icon = mode === 'morning' ? 'icon-sun' : 'icon-moon';
+    var timeIcon = document.querySelector(timeToggleIconSelector);
+    if (timeIcon) {
+      timeIcon.setAttribute('class', 'iconfont ' + icon);
+    }
+    var mobileIcon = document.querySelector(mobileTimeToggleIconSelector);
+    if (mobileIcon) {
+      mobileIcon.setAttribute('class', 'iconfont ' + icon);
+    }
+    var mobileLabel = document.querySelector(mobileTimeToggleLabelSelector);
+    if (mobileLabel) {
+      mobileLabel.textContent = mode === 'morning' ? '早' : '晚';
+    }
+  }
+
+  function applyTimeMode(mode) {
+    var current = mode || getLS(timeModeStorageKey) || getDefaultTimeMode();
+    if (current === getDefaultTimeMode()) {
+      removeLS(timeModeStorageKey);
+    } else if (validTimeModeKeys[current]) {
+      setLS(timeModeStorageKey, current);
+    } else {
+      removeLS(timeModeStorageKey);
+      current = getDefaultTimeMode();
+    }
+    var body = document.body;
+    rootElement.classList.remove('time-mode-morning', 'time-mode-evening');
+    if (body) {
+      body.classList.remove('time-mode-morning', 'time-mode-evening');
+    }
+    rootElement.classList.add('time-mode-' + current);
+    if (body) {
+      body.classList.add('time-mode-' + current);
+    }
+    setTimeButton(current);
+  }
+
+  function toggleTimeMode() {
+    var currentSetting = getLS(timeModeStorageKey);
+    if (validTimeModeKeys[currentSetting]) {
+      currentSetting = currentSetting === 'morning' ? 'evening' : 'morning';
+    } else {
+      currentSetting = getDefaultTimeMode() === 'morning' ? 'evening' : 'morning';
+    }
+    setLS(timeModeStorageKey, currentSetting);
+    return currentSetting;
   }
 
   function applyCustomColorSchemaSettings(schema) {
@@ -251,20 +322,24 @@
 
   // 当页面加载时，将显示模式设置为 localStorage 中自定义的值（如果有的话）
   applyCustomColorSchemaSettings();
+  applyTimeMode();
 
-  Fluid.utils.waitElementLoaded(colorToggleIconSelector, function() {
+  Fluid.utils.listenDOMLoaded(function() {
+    // 再次刷新按钮状态，确保时间按钮在 DOM 准备后正确显示当前状态
     applyCustomColorSchemaSettings();
+    applyTimeMode();
+
     var button = document.querySelector(colorToggleButtonSelector);
     if (button) {
-      // 当用户点击切换按钮时，获得新的显示模式、写入 localStorage、并在页面上生效
-      button.addEventListener('click', function() {        // 检查背景不停止校冷却斶關
+      button.addEventListener('click', function() {
         if (typeof window.isClickPending !== 'undefined' && window.isClickPending) {
           return;
-        }        applyCustomColorSchemaSettings(toggleCustomColorSchema());
+        }
+        applyCustomColorSchemaSettings(toggleCustomColorSchema());
       });
+
       var icon = document.querySelector(colorToggleIconSelector);
       if (icon) {
-        // 光标悬停在按钮上时，切换图标
         button.addEventListener('mouseenter', function() {
           var current = icon.getAttribute('data');
           icon.classList.replace(getIconClass(invertColorSchemaObj[current]), getIconClass(current));
@@ -276,15 +351,33 @@
       }
     }
 
-    // 绑定移动端菜单按钮的事件
     var mobileButton = document.querySelector('#mobile-color-toggle-btn');
     if (mobileButton) {
       mobileButton.addEventListener('click', function() {
-        // 检查背景不停止校冷却斶關
         if (typeof window.isClickPending !== 'undefined' && window.isClickPending) {
           return;
         }
         applyCustomColorSchemaSettings(toggleCustomColorSchema());
+      });
+    }
+
+    var timeButton = document.querySelector(timeToggleButtonSelector);
+    if (timeButton) {
+      timeButton.addEventListener('click', function() {
+        if (typeof window.isClickPending !== 'undefined' && window.isClickPending) {
+          return;
+        }
+        applyTimeMode(toggleTimeMode());
+      });
+    }
+
+    var mobileTimeButton = document.querySelector(mobileTimeToggleButtonSelector);
+    if (mobileTimeButton) {
+      mobileTimeButton.addEventListener('click', function() {
+        if (typeof window.isClickPending !== 'undefined' && window.isClickPending) {
+          return;
+        }
+        applyTimeMode(toggleTimeMode());
       });
     }
   });
