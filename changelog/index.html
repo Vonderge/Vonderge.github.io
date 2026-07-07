@@ -131,6 +131,11 @@
 <body>
   
 
+  <!-- Preloader: visible immediately on initial page load -->
+  <div id="preloader" class="preloader">
+    <img lazyload srcset="/img/loading.gif" data-src="/img/loading.gif" src="/img/loading.gif" alt="Loading">
+  </div>
+
   <header>
     
 
@@ -518,6 +523,21 @@
     NProgress.start()
     window.addEventListener('load', function() {
       NProgress.done();
+      // Fade out and remove preloader after extended delay so GIF shows longer
+      try {
+        var p = document.getElementById('preloader');
+        if (p) {
+          // keep visible a bit longer before starting fade
+          setTimeout(function(){
+            p.classList.add('preloader--hide');
+            setTimeout(function(){ p.parentNode && p.parentNode.removeChild(p); }, 900);
+          }, 1200); // 1.2s extra visible time after load
+        }
+      } catch (e) {
+        console.warn('Preloader removal failed', e);
+      }
+      // Mark page as loaded for any CSS transitions relying on attribute
+      try { document.documentElement.setAttribute('data-page-loaded', 'true'); } catch (e) {}
     })
   </script>
 

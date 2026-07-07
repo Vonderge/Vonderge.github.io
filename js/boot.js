@@ -9,6 +9,10 @@ Fluid.boot.registerEvents = function() {
   Fluid.events.registerScrollDownArrowEvent();
   Fluid.events.registerScrollTopArrowEvent();
   Fluid.events.registerImageLoadedEvent();
+  // register navigation preloader (show preloader on category link clicks)
+  if (Fluid.events.registerPreloaderOnNavigation) {
+    Fluid.events.registerPreloaderOnNavigation();
+  }
 };
 
 Fluid.boot.refresh = function() {
