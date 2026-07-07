@@ -9,10 +9,7 @@ Fluid.boot.registerEvents = function() {
   Fluid.events.registerScrollDownArrowEvent();
   Fluid.events.registerScrollTopArrowEvent();
   Fluid.events.registerImageLoadedEvent();
-  // register navigation preloader (show preloader on category link clicks)
-  if (Fluid.events.registerPreloaderOnNavigation) {
-    Fluid.events.registerPreloaderOnNavigation();
-  }
+  // Keep the GIF preloader for the initial page load only.
 };
 
 Fluid.boot.refresh = function() {

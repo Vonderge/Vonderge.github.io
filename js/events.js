@@ -188,39 +188,9 @@ Fluid.events = {
     }
   },
 
-  // Show preloader when navigating to category pages (or other internal category links)
+  // Keep the GIF preloader for the initial page load only.
   registerPreloaderOnNavigation: function() {
-    document.addEventListener('click', function(e) {
-      // Only left-click without modifier keys
-      if (e.defaultPrevented) return;
-      if (e.button && e.button !== 0) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-
-      var a = e.target.closest && e.target.closest('a[href]');
-      if (!a) return;
-      var href = a.getAttribute('href');
-      if (!href || href.indexOf('#') === 0) return; // anchor link
-
-      try {
-        var dest = new URL(href, window.location.href);
-        // only handle same-origin navigations
-        if (dest.origin !== window.location.origin) return;
-        // show preloader for category pages
-        if (dest.pathname.indexOf('/categories') === 0 || dest.pathname.indexOf('/categories/') !== -1) {
-          e.preventDefault();
-          var p = document.getElementById('preloader');
-          if (p) {
-            p.classList.remove('preloader--hide');
-            // ensure page content is hidden while navigating
-            document.body.removeAttribute('data-page-ready');
-          }
-          // small delay so the preloader is visible before navigation
-          setTimeout(function() { window.location.href = dest.href; }, 600);
-        }
-      } catch (err) {
-        // fallback: do nothing
-      }
-    }, true);
+    // Intentionally left empty to prevent showing the preloader again on category switches.
   },
 
   registerRefreshCallback: function(callback) {
