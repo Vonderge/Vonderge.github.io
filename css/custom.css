@@ -247,19 +247,26 @@ button, a, input, textarea, select {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background-image: var(--day-bg, url('/bg/mo.png'));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
   z-index: 2147483647;
-  transition: opacity 0.45s ease, visibility 0.45s ease;
+  transition: opacity 0.45s ease, visibility 0.45s ease, opacity 0.2s ease 0s;
 }
 #preloader.preloader--hide {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-#preloader img {
-  width: 120px;
+
+#preloader .preloader-spinner {
+  width: 80px;
   height: auto;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .member-name {

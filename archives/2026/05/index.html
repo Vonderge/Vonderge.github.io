@@ -62,15 +62,37 @@
       if (scheme === 'dark') {
         document.documentElement.setAttribute('data-user-color-scheme', 'dark');
       }
-    })();
-  </script>
-
-  <!-- 背景CSS變數預初始化 -->
-  <script>
-    (function() {
-      var bgPair = { day: "url('/bg/mo.png')", night: "url('/bg/dn2.png')" };
-      document.documentElement.style.setProperty('--day-bg', bgPair.day);
-      document.documentElement.style.setProperty('--night-bg', bgPair.night);
+      
+      // 初始化背景 CSS 变量 - 根据时间模式控制按钮设置
+      var timeModeKey = 'Fluid_Time_Mode';
+      var timeMode = null;
+      try {
+        timeMode = localStorage.getItem(timeModeKey);
+      } catch(e) {}
+      
+      var dayBg = "url('/bg/mo.png')";
+      var nightBg = "url('/bg/dn2.png')";
+      
+      // 根据时间模式按钮设置背景：morning 早上背景，evening 晚上背景
+      if (timeMode === 'morning') {
+        document.documentElement.style.setProperty('--day-bg', dayBg);
+      } else if (timeMode === 'evening') {
+        document.documentElement.style.setProperty('--day-bg', nightBg);
+      } else {
+        // 如果没有保存的设置，根据当前时间决定
+        var hour = new Date().getHours();
+        if (hour >= 6 && hour < 18) {
+          document.documentElement.style.setProperty('--day-bg', dayBg);
+        } else {
+          document.documentElement.style.setProperty('--day-bg', nightBg);
+        }
+      }
+      document.documentElement.style.setProperty('--night-bg', nightBg);
+      
+      // 应用当前主题的背景
+      if (scheme === 'dark') {
+        document.documentElement.style.setProperty('--day-bg', nightBg);
+      }
     })();
   </script>
 
@@ -129,7 +151,7 @@
 
   <!-- Preloader: visible immediately on initial page load -->
   <div id="preloader" class="preloader">
-    <img lazyload srcset="/img/loading.gif" data-src="/img/loading.gif" src="/img/loading.gif" alt="Loading">
+    <img lazyload srcset="/img/loading.gif" data-src="/img/loading.gif" src="/img/loading.gif" alt="Loading" class="preloader-spinner">
   </div>
 
   <header>
@@ -495,15 +517,14 @@
     NProgress.start()
     window.addEventListener('load', function() {
       NProgress.done();
-      // Fade out and remove preloader after extended delay so GIF shows longer
+      // Keep the morning GIF visible longer so it is actually noticeable.
       try {
         var p = document.getElementById('preloader');
         if (p) {
-          // keep visible a bit longer before starting fade
-          setTimeout(function(){
+          setTimeout(function() {
             p.classList.add('preloader--hide');
             setTimeout(function(){ p.parentNode && p.parentNode.removeChild(p); }, 900);
-          }, 1200); // 1.2s extra visible time after load
+          }, 2000);
         }
       } catch (e) {
         console.warn('Preloader removal failed', e);

@@ -19,15 +19,15 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="2026-07-03 ✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示 ✅ 將成員頁 .member-role 及 .member-desc 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂 ✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能  2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，">
+    <meta name="description" content="2026-07-08 ✅ 實現時間模式按鈕控制的 GIF 預加載器 - 早上顯示，晚上不顯示 ✅ 將晚上 GIF 背景改為 Minecraft 建築夜景圖片 (dn2.png)，營造夜晚氛圍 ✅ 調整 GIF 預加載器顯示時長為 2 秒，提升用戶可見性 ✅ 修復規則衝突問題 - 確保晚上模式下 GIF 背景能正確顯示 ✅ 添加時間模式按鈕點擊時重新顯示 GIF 功能，使用戶能在任何時候看到對應背景">
 <meta property="og:type" content="website">
 <meta property="og:title" content="更新日誌">
 <meta property="og:url" content="http://example.com/changelog/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="2026-07-03 ✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示 ✅ 將成員頁 .member-role 及 .member-desc 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂 ✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能  2026-07-01 ✅ 加快日夜背景切換過渡，從 1.6s 改為 0.8s ✅ 修正深色模式初始化樣式，">
+<meta property="og:description" content="2026-07-08 ✅ 實現時間模式按鈕控制的 GIF 預加載器 - 早上顯示，晚上不顯示 ✅ 將晚上 GIF 背景改為 Minecraft 建築夜景圖片 (dn2.png)，營造夜晚氛圍 ✅ 調整 GIF 預加載器顯示時長為 2 秒，提升用戶可見性 ✅ 修復規則衝突問題 - 確保晚上模式下 GIF 背景能正確顯示 ✅ 添加時間模式按鈕點擊時重新顯示 GIF 功能，使用戶能在任何時候看到對應背景">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-07-02T17:27:53.931Z">
-<meta property="article:modified_time" content="2026-07-02T17:27:50.941Z">
+<meta property="article:published_time" content="2026-07-07T18:02:55.271Z">
+<meta property="article:modified_time" content="2026-07-07T18:02:55.271Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -66,15 +66,37 @@
       if (scheme === 'dark') {
         document.documentElement.setAttribute('data-user-color-scheme', 'dark');
       }
-    })();
-  </script>
-
-  <!-- 背景CSS變數預初始化 -->
-  <script>
-    (function() {
-      var bgPair = { day: "url('/bg/mo.png')", night: "url('/bg/dn2.png')" };
-      document.documentElement.style.setProperty('--day-bg', bgPair.day);
-      document.documentElement.style.setProperty('--night-bg', bgPair.night);
+      
+      // 初始化背景 CSS 变量 - 根据时间模式控制按钮设置
+      var timeModeKey = 'Fluid_Time_Mode';
+      var timeMode = null;
+      try {
+        timeMode = localStorage.getItem(timeModeKey);
+      } catch(e) {}
+      
+      var dayBg = "url('/bg/mo.png')";
+      var nightBg = "url('/bg/dn2.png')";
+      
+      // 根据时间模式按钮设置背景：morning 早上背景，evening 晚上背景
+      if (timeMode === 'morning') {
+        document.documentElement.style.setProperty('--day-bg', dayBg);
+      } else if (timeMode === 'evening') {
+        document.documentElement.style.setProperty('--day-bg', nightBg);
+      } else {
+        // 如果没有保存的设置，根据当前时间决定
+        var hour = new Date().getHours();
+        if (hour >= 6 && hour < 18) {
+          document.documentElement.style.setProperty('--day-bg', dayBg);
+        } else {
+          document.documentElement.style.setProperty('--day-bg', nightBg);
+        }
+      }
+      document.documentElement.style.setProperty('--night-bg', nightBg);
+      
+      // 应用当前主题的背景
+      if (scheme === 'dark') {
+        document.documentElement.style.setProperty('--day-bg', nightBg);
+      }
     })();
   </script>
 
@@ -133,7 +155,7 @@
 
   <!-- Preloader: visible immediately on initial page load -->
   <div id="preloader" class="preloader">
-    <img lazyload srcset="/img/loading.gif" data-src="/img/loading.gif" src="/img/loading.gif" alt="Loading">
+    <img lazyload srcset="/img/loading.gif" data-src="/img/loading.gif" src="/img/loading.gif" alt="Loading" class="preloader-spinner">
   </div>
 
   <header>
@@ -417,7 +439,14 @@
                 
 
 <article class="page-content">
-  <h2 id="2026-07-03"><a href="#2026-07-03" class="headerlink" title="2026-07-03"></a>2026-07-03</h2><ul>
+  <h2 id="2026-07-08"><a href="#2026-07-08" class="headerlink" title="2026-07-08"></a>2026-07-08</h2><ul>
+<li>✅ 實現時間模式按鈕控制的 GIF 預加載器 - 早上顯示，晚上不顯示</li>
+<li>✅ 將晚上 GIF 背景改為 Minecraft 建築夜景圖片 (dn2.png)，營造夜晚氛圍</li>
+<li>✅ 調整 GIF 預加載器顯示時長為 2 秒，提升用戶可見性</li>
+<li>✅ 修復規則衝突問題 - 確保晚上模式下 GIF 背景能正確顯示</li>
+<li>✅ 添加時間模式按鈕點擊時重新顯示 GIF 功能，使用戶能在任何時候看到對應背景</li>
+</ul>
+<h2 id="2026-07-03"><a href="#2026-07-03" class="headerlink" title="2026-07-03"></a>2026-07-03</h2><ul>
 <li>✅ 新增成員頁時間模式切換按鈕，可手動切換早上&#x2F;晚上顯示</li>
 <li>✅ 將成員頁 <code>.member-role</code> 及 <code>.member-desc</code> 統一改為金色字體，避免日夜模式切換出現文字顏色錯亂</li>
 <li>✅ 簡化時間模式切換邏輯，移除多餘 JS 內聯樣式操作，提升頁面載入與執行效能</li>
@@ -523,15 +552,14 @@
     NProgress.start()
     window.addEventListener('load', function() {
       NProgress.done();
-      // Fade out and remove preloader after extended delay so GIF shows longer
+      // Keep the morning GIF visible longer so it is actually noticeable.
       try {
         var p = document.getElementById('preloader');
         if (p) {
-          // keep visible a bit longer before starting fade
-          setTimeout(function(){
+          setTimeout(function() {
             p.classList.add('preloader--hide');
             setTimeout(function(){ p.parentNode && p.parentNode.removeChild(p); }, 900);
-          }, 1200); // 1.2s extra visible time after load
+          }, 2000);
         }
       } catch (e) {
         console.warn('Preloader removal failed', e);

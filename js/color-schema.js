@@ -130,6 +130,38 @@
       body.classList.add('time-mode-' + current);
     }
     setTimeButton(current);
+    
+    // Update GIF preloader background based on time mode
+    var dayBg = "url('/bg/mo.png')";
+    var nightBg = "url('/bg/dn2.png')";
+    if (current === 'morning') {
+      rootElement.style.setProperty('--day-bg', dayBg);
+    } else if (current === 'evening') {
+      rootElement.style.setProperty('--day-bg', nightBg);
+    }
+    
+    // Show/recreate preloader to display the new background
+    var preloader = document.getElementById('preloader');
+    if (!preloader && body) {
+      // 如果预加载器不存在，重新创建一个
+      preloader = document.createElement('div');
+      preloader.id = 'preloader';
+      preloader.className = 'preloader';
+      preloader.innerHTML = '<img src="/img/loading.gif" alt="Loading" class="preloader-spinner">';
+      body.insertBefore(preloader, body.firstChild);
+      
+      // 显示 2 秒后淡出
+      setTimeout(function() {
+        if (preloader) {
+          preloader.classList.add('preloader--hide');
+          setTimeout(function() {
+            if (preloader && preloader.parentNode) {
+              preloader.parentNode.removeChild(preloader);
+            }
+          }, 900);
+        }
+      }, 2000);
+    }
   }
 
   function toggleTimeMode() {

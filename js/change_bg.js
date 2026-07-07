@@ -18,9 +18,28 @@ function pickRandomIndex() {
   return totalSets <= 1 ? 0 : Math.floor(Math.random() * totalSets);
 }
 
-// 設置 CSS 變數
+// 设置 CSS 变數
 function setBgVariable(type, value) {
   document.documentElement.style.setProperty(`--${type}-bg`, value);
+}
+
+// 平滑過渡預加載器背景
+function transitionPreloaderBg(bgValue) {
+  const preloader = document.getElementById('preloader');
+  if (!preloader) return;
+  
+  // 淡出
+  preloader.style.opacity = '0.3';
+  
+  // 更新背景
+  setTimeout(() => {
+    document.documentElement.style.setProperty('--day-bg', bgValue);
+  }, 200);
+  
+  // 淡入
+  setTimeout(() => {
+    preloader.style.opacity = '1';
+  }, 400);
 }
 
 // 打字機動畫效果
@@ -162,14 +181,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
     requestAnimationFrame(() => {
       const newSchema = document.documentElement.getAttribute('data-user-color-scheme');
+      
+      // 检查时间模式以决定预加载器背景
+      var timeModeKey = 'Fluid_Time_Mode';
+      var timeMode = null;
+      try {
+        timeMode = localStorage.getItem(timeModeKey);
+      } catch(e) {}
 
       if (newSchema === 'dark') {
         banners.forEach(el => el.classList.add('is-dark-fade'));
         currentIdx = pickRandomIndex();
         setBgVariable('night', bgPairs[currentIdx].night);
+        // 預加載器背景根據時間模式設置
+        if (timeMode === 'morning') {
+          transitionPreloaderBg(bgPairs[currentIdx].day);
+        } else if (timeMode === 'evening') {
+          transitionPreloaderBg(bgPairs[currentIdx].night);
+        } else {
+          transitionPreloaderBg(bgPairs[currentIdx].night);
+        }
       } else {
         banners.forEach(el => el.classList.remove('is-dark-fade'));
         setBgVariable('day', bgPairs[currentIdx].day);
+        // 預加載器背景根據時間模式設置
+        if (timeMode === 'morning') {
+          transitionPreloaderBg(bgPairs[currentIdx].day);
+        } else if (timeMode === 'evening') {
+          transitionPreloaderBg(bgPairs[currentIdx].night);
+        } else {
+          transitionPreloaderBg(bgPairs[currentIdx].day);
+        }
       }
 
       setTimeout(updateBannerText, 50);
